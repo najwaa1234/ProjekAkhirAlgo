@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdio.h>
+#include <cstring>
 #include <iomanip>
 using namespace std;
 
@@ -49,30 +50,19 @@ int login() {
     cin >> user;
     cout << "Password : "; 
     cin >> pass;
-    cout << "-----------------------------------------\n";
-
-	cout << "Login berhasil! Selamat datang, " << user << "!\n";
-	system("cls");
 
     char u[30], p[30];
     while (fscanf(fp, "%s %s", u, p) != EOF) {
-        if (sama(user, u) && sama(pass, p)) {
-
-            int i = 0;
-            while (user[i] != '\0') {
-                userLogin[i] = user[i];
-                i++;
-            }
-            userLogin[i] = '\0';
-
+        if (strcmp(user, u) == 0 && strcmp(pass, p) == 0) {
+            strcpy(userLogin, user);
             fclose(fp);
+            cout << "Login berhasil!\n";
             return 1;
         }
     }
     fclose(fp);
     return 0;
 }
-
 void tambahKamar(const char nama[], const char bed[], int kapasitas, int harga) {
     Kamar *baru = new Kamar;
 
@@ -220,6 +210,107 @@ void pesanKamar() {
     }
 }
 
+void hapusKamar() {
+    if(headKamar  == NULL) {
+        cout << "Daftar kamar kosong\n";
+        return;
+    }
+
+    char nama[50];
+    cout << "Masukkan nama kamar yang ingin dihapus: ";
+    cin.ignore();
+    cin.getline(nama,50);
+
+    if(strcmp(headKamar->nama, nama) == 0) {
+        Kamar *toDelete = headKamar;
+        headKamar = headKamar->next;
+        delete toDelete;
+        cout << "daftar kamar berhasil dihapus\n";
+        return;
+    }
+
+    Kamar *temp = headKamar;
+    while(temp->next != NULL && strcmp(temp->next->nama, nama) != 0) {
+        temp = temp->next;
+    }
+
+    if (temp->next == NULL) {
+        cout << "Daftar kamar tidak ditemukan\n";
+        return;
+    }
+
+    Kamar *toDelete = temp->next;
+    temp->next = temp->next->next;
+    delete toDelete;
+    cout << "Daftar kamar berhasil dihapus\n";
+    
+}
+
+void updateKamar() {
+    if(headKamar == NULL) {
+        cout << "Daftar kamar kosong\n";
+        return;
+    }
+
+    char nama[50];
+    cout << "Masukkan nama kamar yang ingin diupdate: ";
+    cin.ignore();
+    cin.getline(nama, 50);
+
+    Kamar *temp = headKamar;
+    while(temp != NULL && strcmp(temp->nama, nama) != 0) {
+        temp = temp->next;
+    }
+
+    if(temp == NULL) {
+        cout << "Kamar tidak ditemukan!\n";
+        return; 
+    }
+
+    cout << "\nKamar ditemukan!\n";
+    cout << "Nama Kamar       : " << temp->nama << endl;
+    cout << "Tipe Bed         : " << temp->bed << endl;
+    cout << "Kapasitas        : " << temp->kapasitas << endl;
+    cout << "Harga/malam      : " << temp->harga << endl; 
+    cout << "Status           : " << (temp->tersedia ? "Tersedia" :  "Penuh") << endl;
+
+    int pilih;
+    cout << "\nPilih data yang ingin diupdate:\n";
+    cout << "1. Nama Kamar\n";
+    cout << "2. Tipe Bed\n";
+    cout << "3. Kapasitas\n";
+    cout << "4. Harga/malam\n";
+    cout << "5. Status\n";
+    cout << "Pilih : ";
+    cin >> pilih;
+
+    if(pilih == 1) {
+       cout << "Masukkan nama kamar baru : ";
+       cin >> temp->nama; 
+    }
+    else if(pilih == 2) {
+        cout << "Masukkan tipe bed baru : ";
+        cin >> temp->bed;
+    }
+    else if(pilih == 3) {
+        cout << "Masukkan kapasitas baru : ";
+        cin >> temp->kapasitas;
+    }
+    else if(pilih == 4) {
+		cout << "Masukkan harga baru : "; 
+		cin >> temp->harga;
+	}
+	else if(pilih == 5) {
+		cout << "Status (1 = tersedia, 0 = penuh): ";
+        cin >> temp->tersedia;
+	}
+    else {
+        cout << "Pilihan tidak valid!\n";
+        return;
+    }
+    cout << "Data kamar berhasil diupdate!\n";
+}
+
 void riwayat() {
     cout << "\n========== RIWAYAT PEMESANAN ==========\n";
 
@@ -272,6 +363,62 @@ void saveKamar() {
     fclose(fp);
 }
 
+void menukamar() {
+	int pilih;
+	
+	do {
+		cout << "\n==== MENU KELOLA KAMAR ===\n";	
+		cout << "1. Tampilkan Kamar\n";
+		cout << "2. Tambahkan Kamar\n";
+		cout << "3. Update Kamar\n";
+		cout << "4. Hapus Kamar\n";
+		cout << "5. Keluar\n";
+		cout << "Pilih: ";
+		cin >> pilih;
+		
+		switch (pilih) {
+            case 1: {
+                int urut;
+                cout << "1. Ascending\n2. Descending\nPilih: ";
+                cin >> urut;
+                if (urut == 1) tampilSorting(1);
+                else tampilSorting(0);
+                break;
+            }
+            case 2: {
+                char nama[50], bed[30];
+                int kap, harga;
+
+                cin.ignore();
+                cout << "Nama kamar: ";
+                cin.getline(nama, 50);
+                cout << "Tipe bed: ";
+                cin.getline(bed, 30);
+                cout << "Kapasitas: ";
+                cin >> kap;
+                cout << "Harga: ";
+                cin >> harga;
+
+                tambahKamar(nama, bed, kap, harga);
+                cout << "Kamar berhasil ditambah!\n";
+                break;
+            }
+            case 3:
+                updateKamar();
+                break;
+            case 4:
+                hapusKamar();
+                break;
+            case 5:
+                cout << "Kembali ke menu utama...\n";
+                break;
+            default:
+                cout << "Pilihan tidak valid!\n";
+        }
+
+    } while (pilih != 5);
+}
+
 void loadKamar() {
     FILE *fp = fopen("kamar.txt", "r");
     if (fp == NULL) return;
@@ -286,6 +433,37 @@ void loadKamar() {
     }
 
     fclose(fp);
+}
+
+void menuPricelist() {
+    int pilih;
+
+    do {
+        cout << "\n=== PRICELIST KAMAR ===\n";
+        cout << "1. Lihat Ascending\n";
+        cout << "2. Lihat Descending\n";
+        cout << "3. Kelola Kamar\n";
+        cout << "4. Kembali\n";
+        cout << "Pilih: ";
+        cin >> pilih;
+
+        switch (pilih) {
+            case 1:
+                tampilSorting(1);
+                break;
+            case 2:
+                tampilSorting(0);
+                break;
+            case 3:
+                menukamar(); 
+                break;
+            case 4:
+                break;
+            default:
+                cout << "Pilihan tidak valid\n";
+        }
+
+    } while (pilih != 4);
 }
 
 int main() {
@@ -310,7 +488,7 @@ int main() {
     int pilih; 
 
     do {  
-
+        cout << "\n------- WELCOME TO STAYEASE HOTEL------\n";
         cout << "\n+---------------------------------+\n";
         cout << "|          StayEase Hotel         |\n";
         cout << "+---------------------------------+\n";
@@ -327,23 +505,16 @@ int main() {
             continue;
         }
 
-        if (pilih == 1) {
-            int urut;
-            cout << "\nLIHAT PRICELIST KAMAR SECARA:\n";
-            cout << "1. Ascending\n";
-            cout << "2. Descending\n";
-            cout << "Pilih: ";
-            cin >> urut;
 
-            if (urut == 1) tampilSorting(1);
-            else if (urut == 2) tampilSorting(0);
-        }
-        else if (pilih == 2) {
-            pesanKamar();
-        }
-        else if (pilih == 3) {
-            riwayat();
-        }
+			if (pilih == 1) {
+				menuPricelist(); 
+			}
+			else if (pilih == 2) {
+				pesanKamar();
+			}
+			else if (pilih == 3) {
+				riwayat();
+			}
 
     } while (pilih != 4); 
 
