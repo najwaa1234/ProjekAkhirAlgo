@@ -55,14 +55,18 @@ int login() {
     while (kesempatan > 0) {
 
         fp = fopen("user.txt", "r");
+
         if (fp == NULL) {
             cout << "File user tidak ditemukan!\n";
             return 0;
         }
 
         cout << "\n========== StayEase Hotel Login ==========\n";
-        cout << "Username : "; cin >> user;
-        cout << "Password : "; cin >> pass;
+        cout << "Username : ";
+        cin >> user;
+
+        cout << "Password : ";
+        cin >> pass;
 
         int userBenar = 0;
         int passBenar = 0;
@@ -76,19 +80,20 @@ int login() {
                 if (sama(pass, p)) {
                     passBenar = 1;
 
-                    //login berhasil habis itu disimpen ke variabel globab
+                    //login berhasil habis itu disimpen ke variabel global
                     strcpy(userLogin, user);
+
                     fclose(fp);
 
                     cout << "Login berhasil! Selamat datang, " << userLogin << "!\n";
+
                     system("pause"); //buat berhentiin program sementara sampai user pencet lanjut
                     system("cls"); //buat bersihin layar console, jadi nnti lanjut ke menu berikutnya
+
                     return 1;
                 }
-            }
 
-            if (sama(pass, p)) {
-                passBenar = 1;
+                break;
             }
         }
 
@@ -97,18 +102,19 @@ int login() {
         kesempatan--;
 
         if (userBenar && !passBenar) {
-            cout << "Password salah! Sisa: " << kesempatan << endl;
+            cout << "Password salah! Sisa kesempatan: "
+                 << kesempatan << endl;
         }
-        else if (!userBenar && passBenar) {
-            cout << "Username salah!\n";
+        else if (!userBenar) {
+            cout << "Username salah! Sisa kesempatan: "
+                 << kesempatan << endl;
         }
-        else {
-            cout << "Login gagal!\n";
-            system("pause"); 
-            system("cls");
-        }
+
+        system("pause");
+        system("cls");
     }
 
     cout << "Anda gagal login 3 kali.\n";
+
     return 0;
 }
