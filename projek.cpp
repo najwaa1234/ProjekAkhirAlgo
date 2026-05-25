@@ -453,13 +453,21 @@ void updateKamar() {
     cin >> pilih;
 
     if(pilih == 1) {
-       cout << "Masukkan nama kamar baru : ";
-       cin >> temp->nama; 
-    }
-    else if(pilih == 2) {
-        cout << "Masukkan tipe bed baru : ";
-        cin >> temp->bed;
-    }
+
+		cin.ignore(1000, '\n');
+
+		cout << "Masukkan nama kamar baru : ";
+		cin.getline(temp->nama, 50);
+
+	}
+	else if(pilih == 2) {
+
+		cin.ignore(1000, '\n');
+
+		cout << "Masukkan tipe bed baru : ";
+		cin.getline(temp->bed, 30);
+
+	}
     else if(pilih == 3) {
         cout << "Masukkan kapasitas baru : ";
         cin >> temp->kapasitas;
@@ -575,6 +583,9 @@ void saveKamar() { //nyimpen semua data kamardari linked list ke file txt
     fclose(fp);
 }
 
+
+void saveKamar();
+void menuPricelist();
 void menukamar() {
 	int pilih;
 	
@@ -590,12 +601,8 @@ void menukamar() {
 		
 		switch (pilih) {
             case 1: {
-                int urut;
-                cout << "1. Ascending\n2. Descending\nPilih: ";
-                cin >> urut;
-                if (urut == 1) tampilSorting(1);
-                else tampilSorting(0);
-                break;
+				menuPricelist();
+				break;
             }
             case 2: {
                 char nama[50], bed[30];

@@ -1,0 +1,8 @@
+Kamar Keluarga;1 Double Bed;4;2800000;1
+The Level Suite;1 King Bed;2;3320000;1
+Family Suite;1 Double Bed;4;4700000;1
+Suite Presiden;1 King Bed;4;7100000;1
+Luxury;1 King Bed;2;200000;0
+Suite;1 Single Bed;2;200000;1
+Premium;1 king bed;2;4000000;0
+Merbabu;1 King Bed;2;200000;0
