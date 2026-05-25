@@ -6,3 +6,4 @@ Luxury;1 King Bed;2;200000;0
 Suite;1 Single Bed;2;200000;1
 Premium;1 king bed;2;4000000;0
 Merbabu;1 King Bed;2;200000;0
+
